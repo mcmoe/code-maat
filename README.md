@@ -15,12 +15,20 @@ See [Installing Docker](https://docs.docker.com/engine/installation/)
 
 On the Docker site you find information on how to manage and run Docker containers.
 
+### Pull the Docker image
+
+To leverage on a continuously prebuilt Docker image, simply pull it from Docker Hub:
+
+```sh
+docker pull mcmoe/code-maat
+```
+
 ### Build the Docker image
 
 To build a Code Maat image run  
 
 ```sh
-docker build -t code-maat https://github.com/peternorrhall/code-maat.git
+docker build -t mcmoe/code-maat https://github.com/mcmoe/code-maat.git
 ```
 
 The Docker image that is created downloads the code-maat Clojure repository and builds and exposes the code-maat jar file as an ENTRYPOINT in the image.
@@ -28,19 +36,21 @@ The Docker image that is created downloads the code-maat Clojure repository and 
 After the build is completed verify that it works by running
 
 ```sh
-docker run --rm code-maat
+docker run --rm mcmoe/code-maat
 ```
 
 and verify that the output is the help information on how to use Code Maat
 
 ```sh
 This is Code Maat, a program used to collect statistics from a VCS.
-Version: 0.9.2-SNAPSHOT
+Version: 1.0-SNAPSHOT
 
 Usage: program-name -l log-file [options]
 
-...
-
+Options:
+  -l, --log LOG                             Log file with input data
+  -c, --version-control VCS                 Input vcs module type: supports svn, git, git2, hg, p4, or tfs
+  ...
   -h, --help
 Please refer to the manual page for more information.
 ```
@@ -62,21 +72,23 @@ To understand how to use code-maat with the different command line option see [R
 For example to analyse the code age of your files
 
 ```sh
-docker run --rm -v /Users/peter/Documents/code-maat:/codemaat code-maat -l /codemaat/mygit.log -c git -a age
+docker run --rm -v /Users/Jude/Documents/code-maat:/codemaat code-maat -l /codemaat/mygit.log -c git -a age
 ```
 
-The log file (mygit.log) that you created earlier resides on the local system. To allow Code Maat to access you need to mount the local folder to the container using Docker's `-v` option. 
-In the example above the mygit.log is located in `/Users/peter/Documents/code-maat`. This is linked to the container directory `/codemaat` which is used when the log file is specified for Code Maat with `-l /codemaat/mygit.log`. You can specify any directory for the container when you mount as long as you use the same path for the `-l` option.
+The log file `mygit.log` that you created earlier resides on the local system. To allow Code Maat to access you need to mount the local folder to the container using Docker's `-v` option.  
+In the example above the `mygit.log` is located in `/Users/Jude/Documents/code-maat`. This is linked to the container directory `/codemaat` which is used when the log file is specified for Code Maat with `-l /codemaat/mygit.log`. You can specify any directory for the container when you mount as long as you use the same path for the `-l` option.
 
 `--rm` is used to remove the Docker container after the analysis is done
 
 ### Contributions
 
-This docker image uses work provided by [Murphy McMahon](https://github.com/pandeiro) on how to install [Leiningen](http://leiningen.org) to compile the Code Maat Clojure code
+To compile the Code Maat Clojure code, we leveraged on [Murphy McMahon's](https://github.com/pandeiro) work using [Leiningen](http://leiningen.org) in his [docker-lein](https://github.com/pandeiro/) repo.
+
+[mcmoe/code-maat](https://github.com/mcmoe/code-maat) is a fork of the [code-maat](https://github.com/peternorrhall/code-maat) project by [Peter Norrhall](https://github.com/peternorrhall). It has been inactive since 2016, and has stopped building since at least 2019 - hence the fork.  
 
 ### License
 
-Copyright © 2016 Peter Norrhall
+Copyright © 2020 Morgan Kobeissi
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
